@@ -1,6 +1,8 @@
+CC=gcc
+CFLAGS=-std=c17 -Wall -Wextra -Wpedantic -g
 
 thex: ./src/thex.c
-	gcc -std=c17 -Wall -Wextra -Wpedantic ./src/thex.c -o thex
+	$(CC) $(CFLAGS) ./src/thex.c -o thex
 
 clean:
 	rm thex

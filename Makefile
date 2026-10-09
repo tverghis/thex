@@ -1,8 +1,18 @@
 CC=gcc
-CFLAGS=-std=c17 -Wall -Wextra -Wpedantic -g
+CFLAGS=-std=c17 -Wall -Wextra -Wpedantic
+OUTDIR=./out
 
-thex: ./src/thex.c
-	$(CC) $(CFLAGS) ./src/thex.c -o thex
+thex: thex.o array.o
+	$(CC) $(OUTDIR)/thex.o $(OUTDIR)/array.o -o $(OUTDIR)/thex
+
+thex.o: out-dir array.o ./src/thex.c ./src/array.h
+	$(CC) $(CFLAGS) -c ./src/thex.c -o $(OUTDIR)/thex.o
+
+array.o: out-dir ./src/array.c ./src/array.h
+	$(CC) $(CFLAGS) -c ./src/array.c -o $(OUTDIR)/array.o
+
+out-dir:
+	mkdir -p $(OUTDIR)
 
 clean:
-	rm thex
+	rm -r $(OUTDIR)

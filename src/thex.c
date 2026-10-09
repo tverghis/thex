@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "array.h"
+
 #define BUF_SIZE 1024
 #define ROW_LEN 16
 #define CHAR_SPACE 0x20
@@ -34,7 +36,7 @@ void print_row(unsigned char *row) {
     }
   }
 
-  printf(" | ");
+  printf(" ┊ ");
 
   for (size_t c = 0; c < ROW_LEN; ++c) {
     print_char_display(row[c]);
@@ -43,6 +45,8 @@ void print_row(unsigned char *row) {
       printf(" ");
     }
   }
+
+  printf("\n");
 }
 
 int main(int argc, char **argv) {
@@ -65,6 +69,9 @@ int main(int argc, char **argv) {
   unsigned char row[ROW_LEN];
   size_t col = 0;
 
+  bool last_row_all_zeroes = false;
+  bool skipping_rows = false;
+
   size_t n;
   while ((n = fread(&buf, sizeof *buf, BUF_SIZE, file)) > 0) {
     for (size_t i = 0; i < n; ++i) {
@@ -73,8 +80,23 @@ int main(int argc, char **argv) {
 
       if (col == ROW_LEN) {
         col = 0;
-        print_row(row);
-        printf("\n");
+
+        if (array_all_zeroes((char *)row, ROW_LEN)) {
+          if (last_row_all_zeroes) {
+            if (!skipping_rows) {
+              printf("*\n");
+              skipping_rows = true;
+            }
+          } else {
+            print_row(row);
+            skipping_rows = false;
+          }
+          last_row_all_zeroes = true;
+        } else {
+          print_row(row);
+          last_row_all_zeroes = false;
+          skipping_rows = false;
+        }
       }
     }
   }

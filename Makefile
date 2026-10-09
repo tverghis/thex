@@ -1,20 +1,22 @@
 CC=gcc
-CFLAGS=-std=c17 -Wall -Wextra -Wpedantic
-OUTDIR=./out
+CFLAGS=-std=c17 -Wall -Wextra -Wpedantic -MMD -MP
+OUT=out
+SOURCES=$(wildcard src/*.c)
+OBJS=$(patsubst src/%.c,$(OUT)/%.o,$(SOURCES))
+DEPS=$(patsubst $(OUT)/%.o,$(OUT)/%.d,$(OBJS))
 
-program: thex.o array.o
-	$(CC) $(OUTDIR)/thex.o $(OUTDIR)/array.o -o $(OUTDIR)/thex
+$(OUT)/thex: $(OBJS) | $(OUT)
+	$(CC) $^ -o $@
 
-thex.o: out-dir array.o ./src/thex.c ./src/array.h
-	$(CC) $(CFLAGS) -c ./src/thex.c -o $(OUTDIR)/thex.o
+-include $(DEPS)
 
-array.o: out-dir ./src/array.c ./src/array.h
-	$(CC) $(CFLAGS) -c ./src/array.c -o $(OUTDIR)/array.o
+$(OUT)/%.o: src/%.c | $(OUT)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-out-dir:
-	mkdir -p $(OUTDIR)
+$(OUT):
+	mkdir -p $(OUT)
 
 clean:
-	rm -r $(OUTDIR)
+	rm -rf $(OUT)
 
 .PHONY: clean

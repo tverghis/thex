@@ -14,7 +14,4 @@ typedef struct {
 // Prints the rows offset and contents to screen.
 void Row_print(Row *row);
 
-// Returns true if the row contains no data.
-bool Row_is_empty(Row *row);
-
 #endif

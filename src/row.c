@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "array.h"
 #include "charutil.h"
 #include "row.h"
 
@@ -15,10 +14,6 @@ void Row_print(Row *r) {
   printf(" | ");
   print_display(r);
   printf("\n");
-}
-
-bool Row_is_empty(Row *row) {
-  return array_all_zeroes((char *)row->data, ROW_LEN);
 }
 
 void print_raw(Row *r) {

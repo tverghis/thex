@@ -5,51 +5,9 @@
 #include <stdlib.h>
 
 #include "array.h"
+#include "row.h"
 
 #define BUF_SIZE 1024
-#define ROW_LEN 16
-#define CHAR_SPACE 0x20
-#define CHAR_LF 0x0A
-
-bool is_printable_char(const unsigned char c) { return c >= '!' && c <= 126; }
-
-void print_char_display(unsigned char c) {
-  if (is_printable_char(c)) {
-    printf("%2c", c);
-  } else if (c == CHAR_SPACE) {
-    printf("%2c", ' ');
-  } else if (c == CHAR_LF) {
-    printf("%2c", '_');
-  } else if (c == 0) {
-    printf("%2c", '.');
-  } else {
-    printf("%02X", c);
-  }
-}
-
-void print_row(size_t offset, unsigned char *row) {
-  printf("%08zx | ", offset);
-
-  for (size_t c = 0; c < ROW_LEN; ++c) {
-    printf("%02X", row[c]);
-
-    if (c < ROW_LEN - 1) {
-      printf(" ");
-    }
-  }
-
-  printf(" | ");
-
-  for (size_t c = 0; c < ROW_LEN; ++c) {
-    print_char_display(row[c]);
-
-    if (c < ROW_LEN - 1) {
-      printf(" ");
-    }
-  }
-
-  printf("\n");
-}
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -83,6 +41,7 @@ int main(int argc, char **argv) {
 
       if (col == ROW_LEN) {
         col = 0;
+        Row thisRow = {.data = row, .offset = offset};
 
         if (array_all_zeroes((char *)row, ROW_LEN)) {
           if (last_row_all_zeroes) {
@@ -91,12 +50,12 @@ int main(int argc, char **argv) {
               skipping_rows = true;
             }
           } else {
-            print_row(offset, row);
+            Row_print(&thisRow);
             skipping_rows = false;
           }
           last_row_all_zeroes = true;
         } else {
-          print_row(offset, row);
+          Row_print(&thisRow);
           last_row_all_zeroes = false;
           skipping_rows = false;
         }

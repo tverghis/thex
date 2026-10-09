@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "array.h"
-#include "row.h"
+#include "printer.h"
 
 #define BUF_SIZE 1024
 
@@ -24,45 +23,17 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  Printer p = {.col = 0,
+               .offset = 0,
+               .row_data = {0},
+               .last_row_empty = false,
+               .is_skipping_rows = false};
+
   unsigned char buf[BUF_SIZE];
-
-  unsigned char row[ROW_LEN];
-  size_t offset = 0;
-  size_t col = 0;
-
-  bool last_row_all_zeroes = false;
-  bool skipping_rows = false;
 
   size_t n;
   while ((n = fread(&buf, sizeof *buf, BUF_SIZE, file)) > 0) {
-    for (size_t i = 0; i < n; ++i) {
-      row[col] = buf[i];
-      col++;
-
-      if (col == ROW_LEN) {
-        col = 0;
-        Row thisRow = {.data = row, .offset = offset};
-
-        if (array_all_zeroes((char *)row, ROW_LEN)) {
-          if (last_row_all_zeroes) {
-            if (!skipping_rows) {
-              printf("*\n");
-              skipping_rows = true;
-            }
-          } else {
-            Row_print(&thisRow);
-            skipping_rows = false;
-          }
-          last_row_all_zeroes = true;
-        } else {
-          Row_print(&thisRow);
-          last_row_all_zeroes = false;
-          skipping_rows = false;
-        }
-
-        offset += ROW_LEN;
-      }
-    }
+    Printer_on_data(&p, buf, n);
   }
 
   if (ferror(file)) {

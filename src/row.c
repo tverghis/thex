@@ -5,9 +5,23 @@
 #include "charutil.h"
 #include "row.h"
 
-void Row_print(Row *r) {
-  printf("%08zx | ", r->offset);
+void print_raw(Row *r);
+void print_display(Row *r);
 
+void Row_print(Row *r) {
+  printf("%08zx", r->offset);
+  printf(" | ");
+  print_raw(r);
+  printf(" | ");
+  print_display(r);
+  printf("\n");
+}
+
+bool Row_is_empty(Row *row) {
+  return array_all_zeroes((char *)row->data, ROW_LEN);
+}
+
+void print_raw(Row *r) {
   for (size_t c = 0; c < ROW_LEN; ++c) {
     printf("%02x", r->data[c]);
 
@@ -15,9 +29,9 @@ void Row_print(Row *r) {
       printf(" ");
     }
   }
+}
 
-  printf(" | ");
-
+void print_display(Row *r) {
   char display[3];
   for (size_t c = 0; c < ROW_LEN; ++c) {
     char_get_display(r->data[c], display);
@@ -27,10 +41,4 @@ void Row_print(Row *r) {
       printf(" ");
     }
   }
-
-  printf("\n");
-}
-
-bool Row_is_empty(Row *row) {
-  return array_all_zeroes((char *)row->data, ROW_LEN);
 }

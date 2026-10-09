@@ -23,15 +23,9 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  Printer p = {.col = 0,
-               .offset = 0,
-               .row_data = {0},
-               .last_row_empty = false,
-               .is_skipping_rows = false};
-
   unsigned char buf[BUF_SIZE];
-
   size_t n;
+  Printer p = Printer_new();
   while ((n = fread(&buf, sizeof *buf, BUF_SIZE, file)) > 0) {
     Printer_on_data(&p, buf, n);
   }

@@ -3,6 +3,16 @@
 #include "array.h"
 #include "printer.h"
 
+Printer Printer_new(void) {
+  Printer p = {.col = 0,
+               .offset = 0,
+               .row_data = {0},
+               .last_row_empty = false,
+               .is_skipping_rows = false};
+
+  return p;
+}
+
 void Printer_on_data(Printer *p, unsigned char *buf, size_t n) {
   for (size_t i = 0; i < n; ++i) {
     p->row_data[p->col] = buf[i];

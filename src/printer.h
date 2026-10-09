@@ -14,6 +14,7 @@ typedef struct {
   bool is_skipping_rows;
 } Printer;
 
+Printer Printer_new(void);
 void Printer_on_data(Printer *p, unsigned char *buf, size_t n);
 
 #endif

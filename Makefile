@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-std=c17 -Wall -Wextra -Wpedantic
 OUTDIR=./out
 
-thex: thex.o array.o
+program: thex.o array.o
 	$(CC) $(OUTDIR)/thex.o $(OUTDIR)/array.o -o $(OUTDIR)/thex
 
 thex.o: out-dir array.o ./src/thex.c ./src/array.h
@@ -16,3 +16,5 @@ out-dir:
 
 clean:
 	rm -r $(OUTDIR)
+
+.PHONY: clean

@@ -27,7 +27,9 @@ void print_char_display(unsigned char c) {
   }
 }
 
-void print_row(unsigned char *row) {
+void print_row(size_t offset, unsigned char *row) {
+  printf("%08zx | ", offset);
+
   for (size_t c = 0; c < ROW_LEN; ++c) {
     printf("%02X", row[c]);
 
@@ -36,7 +38,7 @@ void print_row(unsigned char *row) {
     }
   }
 
-  printf(" ┊ ");
+  printf(" | ");
 
   for (size_t c = 0; c < ROW_LEN; ++c) {
     print_char_display(row[c]);
@@ -67,6 +69,7 @@ int main(int argc, char **argv) {
   unsigned char buf[BUF_SIZE];
 
   unsigned char row[ROW_LEN];
+  size_t offset = 0;
   size_t col = 0;
 
   bool last_row_all_zeroes = false;
@@ -88,15 +91,17 @@ int main(int argc, char **argv) {
               skipping_rows = true;
             }
           } else {
-            print_row(row);
+            print_row(offset, row);
             skipping_rows = false;
           }
           last_row_all_zeroes = true;
         } else {
-          print_row(row);
+          print_row(offset, row);
           last_row_all_zeroes = false;
           skipping_rows = false;
         }
+
+        offset += ROW_LEN;
       }
     }
   }

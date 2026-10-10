@@ -7,29 +7,33 @@
 #include "printer.h"
 #include "reader.h"
 
-int main(int argc, char **argv) {
-  if (argc < 2) {
-    fprintf(stderr, "Error: expected name of file as first argument\n");
-    return EXIT_FAILURE;
-  }
+int main(int argc, char **argv)
+{
+    if (argc < 2)
+    {
+        fprintf(stderr, "Error: expected name of file as first argument\n");
+        return EXIT_FAILURE;
+    }
 
-  const char *filename = argv[1];
+    const char *filename = argv[1];
 
-  Reader reader;
-  if (Reader_init(filename, &reader) == READER_EXIT_FAILURE) {
-    perror("Failed to initialize reader");
-    return EXIT_FAILURE;
-  }
+    reader r;
+    if (reader_init(filename, &r) == READER_EXIT_FAILURE)
+    {
+        perror("Failed to initialize reader");
+        return EXIT_FAILURE;
+    }
 
-  Printer p = Printer_new();
-  if (Reader_read_loop(&reader, &p, &Printer_read_cb) == READER_EXIT_FAILURE) {
-    perror("Failed to read from file");
-    return EXIT_FAILURE;
-  }
+    printer p = printer_new();
+    if (reader_read_loop(&r, &p, &printer_read_cb) == READER_EXIT_FAILURE)
+    {
+        perror("Failed to read from file");
+        return EXIT_FAILURE;
+    }
 
-  Printer_flush(&p);
+    printer_flush(&p);
 
-  Reader_close(&reader);
+    reader_close(&r);
 
-  return 0;
+    return 0;
 }

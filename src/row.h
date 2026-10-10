@@ -6,13 +6,14 @@
 
 #define ROW_LEN 16
 
-typedef struct {
-  size_t offset;
-  unsigned char *data;
-  size_t valid_bytes;
-} Row;
+typedef struct
+{
+    size_t offset;
+    unsigned char *data;
+    size_t valid_bytes;
+} row;
 
 // Prints the rows offset and contents to screen.
-void Row_print(Row *row);
+void row_print(row *row);
 
 #endif

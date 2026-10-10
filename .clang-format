@@ -1,5 +1,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/clang-format-21.x.json
 ---
+AllowShortFunctionsOnASingleLine: None
 BasedOnStyle: LLVM
-IndentWidth: 2
+BreakBeforeBraces: Allman
+Cpp11BracedListStyle: true
+IndentWidth: 4
 ---

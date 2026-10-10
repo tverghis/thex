@@ -4,11 +4,12 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "array.h"
 #include "charutil.h"
 #include "row.h"
 
-void print_raw(row *r);
-void print_display(row *r);
+static void print_raw(row *r);
+static void print_display(row *r);
 
 void row_print(row *r)
 {
@@ -62,4 +63,9 @@ void print_display(row *r)
             printf(" ");
         }
     }
+}
+
+bool row_is_empty(row *r)
+{
+    return array_all_zeroes((char *)r->data, r->valid_bytes);
 }

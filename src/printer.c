@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-#include "array.h"
 #include "printer.h"
 #include "row.h"
 
@@ -38,7 +37,7 @@ void printer_on_data(printer *p, unsigned char *buf, size_t n)
             };
             p->col = 0;
 
-            if (array_all_zeroes((char *)p->row_data, ROW_LEN))
+            if (row_is_empty(&thisRow))
             {
                 if (p->last_row_empty)
                 {

@@ -15,6 +15,11 @@ typedef struct {
 } Printer;
 
 Printer Printer_new(void);
+
+// A thin adapter around Printer_on_data so that it can be passed
+// as the callback function in Reader_read_loop.
+void Printer_read_cb(void *p, unsigned char *buf, size_t n);
+
 void Printer_on_data(Printer *p, unsigned char *buf, size_t n);
 
 #endif

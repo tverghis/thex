@@ -5,8 +5,7 @@
 #include <stdlib.h>
 
 #include "printer.h"
-
-#define BUF_SIZE 1024
+#include "reader.h"
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -16,26 +15,19 @@ int main(int argc, char **argv) {
 
   const char *filename = argv[1];
 
-  FILE *file = fopen(filename, "rb");
-
-  if (file == NULL) {
-    perror("Failed to open file");
+  Reader reader;
+  if (Reader_init(filename, &reader) == READER_EXIT_FAILURE) {
+    perror("Failed to initialize reader");
     return EXIT_FAILURE;
   }
 
-  unsigned char buf[BUF_SIZE];
-  size_t n;
   Printer p = Printer_new();
-  while ((n = fread(&buf, sizeof *buf, BUF_SIZE, file)) > 0) {
-    Printer_on_data(&p, buf, n);
-  }
-
-  if (ferror(file)) {
+  if (Reader_read_loop(&reader, &p, &Printer_read_cb) == READER_EXIT_FAILURE) {
     perror("Failed to read from file");
     return EXIT_FAILURE;
   }
 
-  fclose(file);
+  Reader_close(&reader);
 
   return 0;
 }

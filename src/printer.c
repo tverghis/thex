@@ -13,6 +13,10 @@ Printer Printer_new(void) {
   return p;
 }
 
+void Printer_read_cb(void *p, unsigned char *buf, size_t n) {
+  Printer_on_data((Printer *)p, buf, n);
+}
+
 void Printer_on_data(Printer *p, unsigned char *buf, size_t n) {
   for (size_t i = 0; i < n; ++i) {
     p->row_data[p->col] = buf[i];

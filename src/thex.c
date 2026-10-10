@@ -27,6 +27,8 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  Printer_flush(&p);
+
   Reader_close(&reader);
 
   return 0;

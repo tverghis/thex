@@ -1,4 +1,7 @@
+#include <assert.h>
+
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #include "charutil.h"
@@ -8,6 +11,8 @@ void print_raw(Row *r);
 void print_display(Row *r);
 
 void Row_print(Row *r) {
+  assert(r->valid_bytes <= ROW_LEN);
+
   printf("%08zx", r->offset);
   printf(" | ");
   print_raw(r);
@@ -18,9 +23,13 @@ void Row_print(Row *r) {
 
 void print_raw(Row *r) {
   for (size_t c = 0; c < ROW_LEN; ++c) {
-    printf("%02x", r->data[c]);
+    if (c < r->valid_bytes) {
+      printf("%02x", r->data[c]);
+    } else {
+      printf("%2c", ' ');
+    }
 
-    if (c < ROW_LEN - 1) {
+    if (c < ROW_LEN) {
       printf(" ");
     }
   }
@@ -29,10 +38,14 @@ void print_raw(Row *r) {
 void print_display(Row *r) {
   char display[3];
   for (size_t c = 0; c < ROW_LEN; ++c) {
-    char_get_display(r->data[c], display);
-    printf("%s", display);
+    if (c < r->valid_bytes) {
+      char_get_display(r->data[c], display);
+      printf("%s", display);
+    } else {
+      printf("%2c", ' ');
+    }
 
-    if (c < ROW_LEN - 1) {
+    if (c < ROW_LEN) {
       printf(" ");
     }
   }

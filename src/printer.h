@@ -22,4 +22,7 @@ void Printer_read_cb(void *p, unsigned char *buf, size_t n);
 
 void Printer_on_data(Printer *p, unsigned char *buf, size_t n);
 
+// Flushes any remaining accumulated bytes to the screen.
+void Printer_flush(Printer *p);
+
 #endif

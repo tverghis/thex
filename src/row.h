@@ -9,6 +9,7 @@
 typedef struct {
   size_t offset;
   unsigned char *data;
+  size_t valid_bytes;
 } Row;
 
 // Prints the rows offset and contents to screen.

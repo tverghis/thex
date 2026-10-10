@@ -2,6 +2,7 @@
 
 #include "array.h"
 #include "printer.h"
+#include "row.h"
 
 Printer Printer_new(void) {
   Printer p = {.col = 0,
@@ -23,8 +24,9 @@ void Printer_on_data(Printer *p, unsigned char *buf, size_t n) {
     p->col++;
 
     if (p->col == ROW_LEN) {
+      Row thisRow = {
+          .data = p->row_data, .offset = p->offset, .valid_bytes = p->col};
       p->col = 0;
-      Row thisRow = {.data = p->row_data, .offset = p->offset};
 
       if (array_all_zeroes((char *)p->row_data, ROW_LEN)) {
         if (p->last_row_empty) {
@@ -46,4 +48,14 @@ void Printer_on_data(Printer *p, unsigned char *buf, size_t n) {
       p->offset += ROW_LEN;
     }
   }
+}
+
+void Printer_flush(Printer *p) {
+  if (p->col == 0) {
+    return;
+  }
+
+  Row thisRow = {
+      .data = p->row_data, .offset = p->offset, .valid_bytes = p->col};
+  Row_print(&thisRow);
 }

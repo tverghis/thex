@@ -1,24 +1,55 @@
-#include <errno.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cli.h"
 #include "printer.h"
 #include "reader.h"
 
-int main(int argc, char **argv)
+static int dispatch_cmd(const struct command *cmd);
+static int do_print_cmd(const struct command *cmd);
+
+int main(int argc, char *argv[])
 {
-    if (argc < 2)
+    struct command cmd = parse_args(argc, argv);
+
+    return dispatch_cmd(&cmd);
+}
+
+int dispatch_cmd(const struct command *cmd)
+{
+    if (cmd->type == INVALID)
     {
-        fprintf(stderr, "Error: expected name of file as first argument\n");
         return EXIT_FAILURE;
     }
 
-    const char *filename = argv[1];
+    assert(cmd->filename != NULL);
 
+    switch (cmd->type)
+    {
+    case PRINT:
+    {
+        if (do_print_cmd(cmd) == EXIT_FAILURE)
+        {
+            fprintf(stderr, "Failed to print file.\n");
+            return EXIT_FAILURE;
+        }
+        break;
+    }
+    default:
+    {
+        fprintf(stderr, "Unimplemented command.\n");
+        return EXIT_FAILURE;
+    }
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int do_print_cmd(const struct command *cmd)
+{
     reader r;
-    if (reader_init(filename, &r) == READER_EXIT_FAILURE)
+    if (reader_init(cmd->filename, &r) == READER_EXIT_FAILURE)
     {
         perror("Failed to initialize reader");
         return EXIT_FAILURE;
@@ -35,5 +66,5 @@ int main(int argc, char **argv)
 
     reader_close(&r);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

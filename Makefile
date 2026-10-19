@@ -26,8 +26,8 @@ test: $(TEST_OUT)/thex_test
 $(TEST_OUT)/thex_test: $(FILTERED_OBJS) $(TEST_OUT)/thex_test.o | $(TEST_OUT)
 	$(CC) $^ -o $@
 
-$(TEST_OUT)/thex_test.o: ./tests/main.c | $(TEST_OUT)
-	$(CC) $(CFLAGS) -c ./tests/main.c -o $@
+$(TEST_OUT)/thex_test.o: ./tests/test_main.c | $(TEST_OUT)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST_OUT):
 	mkdir -p $(TEST_OUT)

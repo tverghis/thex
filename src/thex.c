@@ -48,14 +48,14 @@ int dispatch_cmd(const struct command *cmd)
 
 int do_print_cmd(const struct command *cmd)
 {
-    reader r;
+    struct reader r;
     if (reader_init(cmd->filename, &r) == READER_EXIT_FAILURE)
     {
         perror("Failed to initialize reader");
         return EXIT_FAILURE;
     }
 
-    printer p = printer_new();
+    struct printer p = printer_new();
     if (reader_read_loop(&r, &p, &printer_read_cb) == READER_EXIT_FAILURE)
     {
         perror("Failed to read from file");

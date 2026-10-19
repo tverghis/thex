@@ -8,10 +8,10 @@
 #include "charutil.h"
 #include "row.h"
 
-static void print_raw(row *r);
-static void print_display(row *r);
+static void print_raw(struct row *r);
+static void print_display(struct row *r);
 
-void row_print(row *r)
+void row_print(struct row *r)
 {
     assert(r->valid_bytes <= ROW_LEN);
 
@@ -23,7 +23,7 @@ void row_print(row *r)
     printf("\n");
 }
 
-void print_raw(row *r)
+void print_raw(struct row *r)
 {
     for (size_t c = 0; c < ROW_LEN; ++c)
     {
@@ -43,7 +43,7 @@ void print_raw(row *r)
     }
 }
 
-void print_display(row *r)
+void print_display(struct row *r)
 {
     char display[3];
     for (size_t c = 0; c < ROW_LEN; ++c)
@@ -65,7 +65,7 @@ void print_display(row *r)
     }
 }
 
-bool row_is_empty(row *r)
+bool row_is_empty(struct row *r)
 {
     return array_all_zeroes((char *)r->data, r->valid_bytes);
 }

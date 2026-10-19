@@ -3,9 +3,9 @@
 #include "printer.h"
 #include "row.h"
 
-printer printer_new(void)
+struct printer printer_new(void)
 {
-    printer p = {
+    struct printer p = {
         .col = 0,
         .offset = 0,
         .row_data = {0},
@@ -18,10 +18,10 @@ printer printer_new(void)
 
 void printer_read_cb(void *p, unsigned char *buf, size_t n)
 {
-    printer_on_data((printer *)p, buf, n);
+    printer_on_data((struct printer *)p, buf, n);
 }
 
-void printer_on_data(printer *p, unsigned char *buf, size_t n)
+void printer_on_data(struct printer *p, unsigned char *buf, size_t n)
 {
     for (size_t i = 0; i < n; ++i)
     {
@@ -30,7 +30,7 @@ void printer_on_data(printer *p, unsigned char *buf, size_t n)
 
         if (p->col == ROW_LEN)
         {
-            row thisRow = {
+            struct row thisRow = {
                 .data = p->row_data,
                 .offset = p->offset,
                 .valid_bytes = p->col,
@@ -66,14 +66,14 @@ void printer_on_data(printer *p, unsigned char *buf, size_t n)
     }
 }
 
-void printer_flush(printer *p)
+void printer_flush(struct printer *p)
 {
     if (p->col == 0)
     {
         return;
     }
 
-    row thisRow = {
+    struct row thisRow = {
         .data = p->row_data,
         .offset = p->offset,
         .valid_bytes = p->col,
